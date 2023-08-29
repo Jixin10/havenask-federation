@@ -689,7 +689,7 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
 
     private void checkAliveBeforeUpdateTarget(String role) {
         if (false == checkProcessAlive(role)) {
-            throw new RuntimeException(String.format("havenask %s process is not alive, can't update target", role));
+            throw new RuntimeException("havenask" + role + "process is not alive, can't update target");
         }
     }
 }
