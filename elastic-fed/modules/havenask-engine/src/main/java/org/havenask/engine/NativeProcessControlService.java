@@ -465,7 +465,7 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
      * 更新 searcher target
      */
     public synchronized void updateDataNodeTarget() {
-        if (isDataNode && running) {
+        if (isDataNode && running && checkProcessAlive("searcher")) {
             // 更新datanode searcher的target
             runCommand(updateSearcherCommand, commandTimeout);
         }
@@ -475,7 +475,7 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
      * 异步更新 searcher target
      */
     public void updateDataNodeTargetAsync() {
-        if (running && isDataNode) {
+        if (running && isDataNode && checkProcessAlive("searcher")) {
             // 更新datanode searcher的target
             runCommandAsync(updateSearcherCommand);
         }
@@ -485,7 +485,7 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
      * 更新 qrs target
      */
     public synchronized void updateIngestNodeTarget() {
-        if (isIngestNode && running) {
+        if (isIngestNode && running && checkProcessAlive("qrs")) {
             // 更新ingestnode qrs的target
             runCommand(updateQrsCommand, commandTimeout);
         }
@@ -495,7 +495,7 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
      * 异步更新 qrs target
      */
     public void updateIngestNodeTargetAsync() {
-        if (running && isIngestNode) {
+        if (running && isIngestNode && checkProcessAlive("qrs")) {
             // 更新ingestnode qrs的target
             runCommandAsync(updateQrsCommand);
         }
@@ -504,13 +504,13 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
     public synchronized void updateTargetAsync() {
         long start = System.currentTimeMillis();
         Process searchProcess = null;
-        if (isDataNode && running) {
+        if (isDataNode && running && checkProcessAlive("searcher")) {
             // 更新datanode searcher的target
             searchProcess = runCommandAsync(updateSearcherCommand);
         }
 
         Process qrsProcess = null;
-        if (isIngestNode && running) {
+        if (isIngestNode && running && checkProcessAlive("qrs")) {
             // 更新ingestnode qrs的target
             qrsProcess = runCommandAsync(updateQrsCommand);
         }
@@ -565,11 +565,11 @@ public class NativeProcessControlService extends AbstractLifecycleComponent {
                     if (false == running) {
                         return;
                     }
-                    if (isDataNode) {
+                    if (isDataNode && checkProcessAlive("searcher")) {
                         // 更新datanode searcher的target
                         runCommand(updateSearcherCommand, commandTimeout);
                     }
-                    if (isIngestNode) {
+                    if (isIngestNode && checkProcessAlive("qrs")) {
                         // 更新ingestnode qrs的target
                         runCommand(updateQrsCommand, commandTimeout);
                     }
